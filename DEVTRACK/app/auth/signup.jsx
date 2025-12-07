@@ -12,7 +12,7 @@ const signup = () => {
     const [password, setpassword] = useState('');
     const [email, setemail] = useState('');
     const [success, setsuccess] = useState(false);
-    // const [loggedIn, setLoggedIn] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(false);
 
     const router = useRouter();
 
@@ -55,12 +55,14 @@ const signup = () => {
             }
 
         CheckLogIn();
-    }, [])
+    }, [loggedIn])
         
 
     
 
     const HandleSignUpButton = async () => {
+
+        setLoggedIn(!loggedIn)
 
         try {
         await account.create(ID.unique(), email, password, username);    
@@ -68,7 +70,7 @@ const signup = () => {
         setsuccess(true);
         }
         catch (error) {
-        console.error('Error during sign up:', error.message || error); 
+        console.log('Error during sign up:', error.message || error); 
         setsuccess(false)
         }
     }

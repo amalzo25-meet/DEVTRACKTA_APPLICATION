@@ -10,6 +10,7 @@ const login = () => {
     const [password, setpassword] = useState('');
     const [email, setemail] = useState('');
     const [success, setsuccess] = useState(false);
+    const [loggedIn, setLoggedIn] = useState(false);
 
     const router = useRouter();
 
@@ -52,16 +53,18 @@ const login = () => {
                 }
     
             CheckLogIn();
-        }, [])
+        }, [loggedIn])
 
     const HandleSignInButton = async () => {
 
+        setLoggedIn(!loggedIn)
+        
         try {    
         await account.createEmailPasswordSession(email, password); 
         setsuccess(true);
         }
         catch (error) {
-        console.error('Error during sign in:', error.message || error); 
+        console.log('Error during sign in:', error.message || error); 
         setsuccess(false)
         }
     }
