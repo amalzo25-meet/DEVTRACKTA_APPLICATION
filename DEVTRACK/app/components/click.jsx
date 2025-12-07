@@ -1,4 +1,6 @@
 import { Text, TouchableOpacity, View } from 'react-native';
+import styles from './styles';
+
 
 
 
@@ -9,9 +11,8 @@ const ClickButton = ({label, HandlePress}) => {
     <View>
       <TouchableOpacity
         onPress={HandlePress}
-        style={{ backgroundColor: "red", padding: 10, borderRadius: 5, }}
-      >
-        <Text>{label}</Text>
+        style={styles.button}>
+        <Text style={styles.buttontext}>{label}</Text>
       </TouchableOpacity>
     </View>
   );

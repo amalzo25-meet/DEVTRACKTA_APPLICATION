@@ -1,94 +1,60 @@
 import { useRoute } from '@react-navigation/native';
-import { useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
-import { ID, Query } from 'react-native-appwrite';
+import { useEffect, useState } from 'react';
+import { ScrollView, Text, View } from 'react-native';
+import { Query } from 'react-native-appwrite';
 import { account, databases } from '../../appwriteDB/appwriteclient';
-
-
+import styles from '../components/styles';
 
 const Userview2 = () => {
 
-  const [plants, setPlants] = useState({}); 
   const route = useRoute();
-  const plantName = route.params?.plantName;
+  const [plants, setPlants] = useState({});
 
 
-const CheckPlants = async () => {
-  const person = await account.get();
-  const response = await databases.listDocuments(
-    'IMAGEGALLERY',
-    'plants_users',
-    [Query.equal('userID', person.$id)]
-  );
 
-  const plantId = `plant_${Date.now()}`;
+  useEffect(() => {
+    const fetchPlants = async () => {
+      try {
+        const person = await account.get();
+        const response = await databases.listDocuments(
+          "IMAGEGALLERY",
+          "plants_users",
+          [Query.equal("userID", person.$id)]
+        );
 
-  if (response.documents.length > 0) {
-    let raw = response.documents[0].userData;
-    let UserData = {};
-
-    try {
-      UserData = JSON.parse(raw);
-
-      if (typeof UserData === "string") {
-        UserData = JSON.parse(UserData);
+        if (response.documents.length > 0) {
+          const userData = JSON.parse(response.documents[0].userData || '{}');
+          setPlants(userData.plants || {});
+        }
+      } catch (e) {
+        console.log(e);
+        setPlants({});
       }
-    } catch (e) {
-      console.log("Parse error:", e);
-      UserData = {};
+    };
+
+    if (route.params?.plantlist) {
+      setPlants(route.params.plantlist);
+    } else {
+      fetchPlants();
     }
-
-    if (!UserData.plants) UserData.plants = {};
-    UserData.plants[plantId] = plantName;
-    console.log(plantName);
-
-    setPlants(UserData.plants || {});
-
-    return await databases.updateDocument(
-      'IMAGEGALLERY',
-      'plants_users',
-      response.documents[0].$id,
-      {
-        userID: person.$id,
-        userData: JSON.stringify(UserData)
-      }
-    );
-  }
-
-  const userDataC = {
-    name: person.name,
-    plants: { [plantId]: plantName }
-  };
-
-  return await databases.createDocument(
-    'IMAGEGALLERY',
-    'plants_users',
-    ID.unique(),
-    {
-      userID: person.$id,
-      userData: JSON.stringify(userDataC)
-    }
-  );
-};
+  }, [route.params]);
 
 
   return(
-    <View style = {{ flex : 1, marginTop:100}}>
-        <TouchableOpacity
-        onPress={CheckPlants}
-        style={{ backgroundColor: "red", padding: 10, borderRadius: 5, }}
-      >
-        <Text>Add Plant</Text>        
-      </TouchableOpacity>
+    <View style = {{backgroundColor: '#6E260E', flex: 1}}>
+    <ScrollView>
+    <Text style={styles.header3}>Plant History:</Text>
+
               {Object.keys(plants).length === 0 && (
         <Text>No plants yet.</Text>
         )}
 
         {Object.keys(plants).map((plantId) => (
-        <Text key={plantId} style={{ fontSize: 16, marginTop: 5 }}>
+        <Text key={plantId} style={{ fontSize: 17, marginTop: 5, color:'#DAA06D', marginInlineStart: 40}}>
         • {plants[plantId]}
         </Text>
         ))}
+        </ScrollView>
     </View>
   );
 }

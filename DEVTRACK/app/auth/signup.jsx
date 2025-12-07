@@ -1,9 +1,10 @@
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { Alert, StyleSheet, Text, View } from 'react-native';
+import { Alert, Text, View } from 'react-native';
 import { ID } from 'react-native-appwrite';
 import { account } from '../../appwriteDB/appwriteclient';
 import ClickButton from '../components/click';
+import styles from '../components/styles';
 import TextBox from '../components/textbox';
 
 const signup = () => {
@@ -77,7 +78,7 @@ const signup = () => {
 
 return (
   <View style={styles.container}>
-    <Text>Welcome to the Developer's Track!</Text>
+    <Text style={styles.header2}>Welcome to the Developer's Track!</Text>
 
     <TextBox placeholder="Enter Your Username" changetext={newtxt => setusername(newtxt)} text = {username}/>
     <TextBox placeholder="Enter Your Email" changetext={newtxt => setemail(newtxt)} text = {email}/>
@@ -94,9 +95,3 @@ return (
 
 export default signup;
 
-const styles = StyleSheet.create({
-  container: {
-    display: 'flex',
-    flex: 1,
-    marginTop: 100
-}})

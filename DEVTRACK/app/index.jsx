@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import ClickButton from './components/click';
+import styles from './components/styles';
 
 const Welcome = () => {
   
@@ -8,7 +9,7 @@ const Welcome = () => {
 
 return (
   <View style={styles.container}>
-    <Text>Welcome to the Developer's Track!</Text>
+    <Text style={styles.header1}>Welcome to MyPlantApp!</Text>
     <ClickButton label="go to sign up" HandlePress={() => router.push("/auth/signup")} />
     <ClickButton label="go to log in" HandlePress={() => router.push("/auth/login")} />
 
@@ -18,9 +19,3 @@ return (
 
 export default Welcome;
 
-const styles = StyleSheet.create({
-  container: {
-    display: 'flex',
-    flex: 1,
-    marginTop: 100
-}})
